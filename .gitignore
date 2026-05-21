@@ -1,0 +1,27 @@
+# 编译输出
+/target
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+
+# 测试快照
+~/.token-auditor/
+
+# 环境文件
+.env
+.env.local
+
+# Python 测试脚本（可选）
+test_*.py
+!test_multi_api.py

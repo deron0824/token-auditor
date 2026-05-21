@@ -1,0 +1,75 @@
+# TokenAuditor 配置文件
+# 文件位置: ~/.token-auditor/config.toml
+
+[proxy]
+# 代理监听地址（默认 127.0.0.1:11435）
+listen = "127.0.0.1:11435"
+
+# ============================================
+# 成本审计模式配置（可选）
+# ============================================
+# 默认情况下，TokenAuditor 仅显示 Token 消耗和性能指标
+# 如需开启成本审计，请设置 enabled = true 并填写官方基准价格
+
+[audit]
+# 是否开启成本审计模式（默认 false）
+# 开启后会显示成本估算和溢价判定
+enabled = false
+
+# 溢价容忍度（默认 1.2，即 20% 溢价容忍）
+# 计算公式: 溢价阈值 = 官方基准价 × 实际消耗Token × tolerance
+# 当实际扣费 < 溢价阈值时，显示绿色（正常波动）
+# 当实际扣费 ≥ 溢价阈值时，显示红色（严重溢价预警）
+# 说明：第三方平台可能有不同计费策略，请根据实际情况调整
+tolerance = 1.2
+
+# 官方基准价格（仅填写大模型厂商的官方价格）
+# 注意：这里的价格仅用于溢价判定，不代表你的实际账单
+# 如果你使用的第三方平台套餐倍率为 1.5 倍，可以设置 tolerance = 1.5
+
+[audit.prices.openai]
+# OpenAI 官方价格（https://openai.com/api/pricing/）
+# gpt-4o: $2.50 / 1M input tokens, $10.00 / 1M output tokens
+"gpt-4o" = { input = 0.0000025, output = 0.000010 }
+# gpt-4o-mini: $0.15 / 1M input tokens, $0.60 / 1M output tokens
+"gpt-4o-mini" = { input = 0.00000015, output = 0.0000006 }
+# gpt-4: $30.00 / 1M input tokens, $60.00 / 1M output tokens
+"gpt-4" = { input = 0.00003, output = 0.00006 }
+
+[audit.prices.anthropic]
+# Anthropic 官方价格（https://www.anthropic.com/pricing）
+# claude-3-5-sonnet: $3.00 / 1M input tokens, $15.00 / 1M output tokens
+"claude-3-5-sonnet" = { input = 0.000003, output = 0.000015 }
+# claude-3-haiku: $0.25 / 1M input tokens, $1.25 / 1M output tokens
+"claude-3-haiku" = { input = 0.00000025, output = 0.00000125 }
+
+[audit.prices.google]
+# Google Gemini 官方价格（https://ai.google.dev/pricing）
+# gemini-1.5-pro: $3.50 / 1M input tokens, $10.50 / 1M output tokens
+"gemini-1.5-pro" = { input = 0.0000035, output = 0.0000105 }
+# gemini-1.5-flash: $0.35 / 1M input tokens, $1.05 / 1M output tokens
+"gemini-1.5-flash" = { input = 0.00000035, output = 0.00000105 }
+
+# ============================================
+# 显示配置
+# ============================================
+
+[display]
+# 显示模式: terminal（终端）/ vscode（VS Code 插件）/ both（两者）
+mode = "terminal"
+
+# 成本告警阈值（美元）
+# 当单次请求成本超过此值时，显示警告
+alert_threshold = 0.10
+
+# ============================================
+# 存储配置
+# ============================================
+
+[storage]
+# JSON 快照路径（支持 ~ 表示家目录）
+snapshot_path = "~/.token-auditor/audit-snapshot.json"
+
+# 快照间隔（秒）
+# 每隔此时间自动生成一次快照
+snapshot_interval = 300  # 5 分钟
